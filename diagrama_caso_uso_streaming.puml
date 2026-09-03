@@ -1,0 +1,25 @@
+@startuml diagrama_caso_uso_streaming
+
+left to right direction
+
+actor "Usuario" as Usuario
+actor "Administrador de conteúdo" as Admin
+actor "Serviço de notificação" as Notificacao
+
+rectangle "Site de streaming" {
+  usecase "Catálogo personalizado" as UC1
+  usecase "Descoberta semanal" as UC2
+  usecase "Busca com sugestões" as UC3
+  usecase "Avaliar conteúdo" as UC4
+  usecase "Gerenciar catálogo" as UC5
+  usecase "Notificar lançamentos" as UC6
+}
+
+Usuario --> UC1
+Usuario --> UC2
+Usuario --> UC3
+Usuario --> UC4
+Admin --> UC5
+UC6 --> Notificacao
+
+@enduml
