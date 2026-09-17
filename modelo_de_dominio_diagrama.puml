@@ -1,0 +1,48 @@
+@startuml site_de_streaming 
+
+class Usuario {
+  nome
+  email
+}
+
+class SessaoDeVisualizacao {
+  data
+  hora
+}
+
+class ItemAssistido {
+  progresso
+}
+
+class Conteudo {
+  titulo
+  duracao
+}
+
+class Genero {
+  nome
+}
+
+class Catalogo {
+  nome
+}
+
+class Dispositivo {
+  tipo
+}
+
+class Avaliacao {
+  nota
+  comentario
+}
+
+Usuario "1" -- "0..*" SessaoDeVisualizacao : Realiza
+SessaoDeVisualizacao "1" -- "1..*" ItemAssistido : Contido-em
+ItemAssistido "0..1" -- "1" Conteudo : Registra-visualizacao-de
+Conteudo "*" -- "1..*" Genero : Classificado-como
+Conteudo "*" -- "1" Catalogo : Armazenado-em
+Catalogo "1" -- "1..*" Dispositivo : Disponivel-em
+SessaoDeVisualizacao "*" -- "1" Dispositivo : Assistida-em
+SessaoDeVisualizacao "1" -- "0..1" Avaliacao : Avaliada-por
+
+@enduml
