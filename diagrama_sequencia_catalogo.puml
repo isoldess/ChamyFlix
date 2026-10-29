@@ -1,0 +1,58 @@
+@startuml
+title DSS - UC01 Visualizar catálogo personalizado
+hide footbox
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceMessageAlign left
+
+actor ":Usuário" as ator
+
+participant ":TelaHome" as Tela
+participant ":CtrlHome" as Ctrl
+participant ":usuarioLogado" as Usr
+participant ":sessão" as Sessao
+participant ":motorRecomendação" as Motor
+participant ":catálogo" as Cat
+participant ":conteúdo" as Cont
+
+ator -> Tela : 1: acessarHome()
+activate Tela
+
+Tela -> Ctrl : 2: acessarHome()
+activate Ctrl
+
+Ctrl -> Usr : 3: getGênerosFavoritos()
+activate Usr
+Usr --> Ctrl : gêneros
+deactivate Usr
+
+Ctrl -> Usr : 4: iniciarSessão()
+activate Usr
+Usr -> Sessao ** : 5: criar()
+deactivate Usr
+
+Ctrl -> Motor : 6: calcularRecomendações(gêneros)
+activate Motor
+
+Motor -> Cat : 7: getConteúdos(gêneros)
+activate Cat
+
+loop para cada conteúdo do catálogo
+  Cat -> Cont : 8: getGênero()
+  activate Cont
+  Cont --> Cat : gênero
+  deactivate Cont
+end
+
+Cat --> Motor : conteúdos
+deactivate Cat
+
+Motor --> Ctrl : 9: fileirasRecomendadas
+deactivate Motor
+
+Ctrl -> Tela : 10: exibirHome(fileiras)
+deactivate Ctrl
+
+Tela --> ator : 11: home personalizada
+deactivate Tela
+@enduml
