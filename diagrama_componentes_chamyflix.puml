@@ -1,0 +1,82 @@
+@startuml diagrama_componentes_chamyflix
+
+title Diagrama de componentes - ChamyFlix
+
+actor "Usuário" as Usuario
+actor "Administrador de conteúdo" as Admin
+
+package "Site de streaming (ChamyFlix)" {
+
+  component "Interface web" as UIWeb <<apresentação>>
+  component "Painel admin" as PainelAdmin <<apresentação>>
+
+  component "Controlador" as Controlador <<controle>>
+
+  component "Sessão" as Sessao <<domínio>>
+  component "Recomendação" as Recomendacao <<domínio>>
+  component "Busca" as Busca <<domínio>>
+  component "Avaliações" as Avaliacoes <<domínio>>
+  component "Gestão de catálogo" as Gestao <<domínio>>
+  component "Catálogo de conteúdo" as Catalogo <<domínio>>
+  component "Notificações" as Notificacoes <<domínio>>
+
+  () "IAçõesUsuário" as IAcoesUsuario
+  () "IAçõesAdmin" as IAcoesAdmin
+  () "ISessão" as ISessao
+  () "IRecomendação" as IRecomendacao
+  () "IBusca" as IBusca
+  () "IAvaliação" as IAvaliacao
+  () "IGestãoCatálogo" as IGestaoCatalogo
+  () "ICatálogo" as ICatalogo
+  () "INotificação" as INotificacao
+}
+
+component "Serviço de notificação" as ServicoNotif <<externo>>
+() "INotificaçãoExterna" as INotifExterna
+
+Usuario --> UIWeb : UC1 a UC4
+Admin --> PainelAdmin : UC5
+
+UIWeb ..> IAcoesUsuario : <<usa>>
+PainelAdmin ..> IAcoesAdmin : <<usa>>
+IAcoesUsuario -down- Controlador
+IAcoesAdmin -down- Controlador
+
+Controlador ..> ISessao : <<usa>>\nobtém gêneros,\ninicia sessão
+Controlador ..> IRecomendacao : <<usa>>\nmonta fileiras
+Controlador ..> IBusca : <<usa>>\nbusca e sugestões
+Controlador ..> IAvaliacao : <<usa>>\nregistra nota
+Controlador ..> IGestaoCatalogo : <<usa>>\nmantém conteúdos
+
+ISessao -down- Sessao
+IRecomendacao -down- Recomendacao
+IBusca -down- Busca
+IAvaliacao -down- Avaliacoes
+IGestaoCatalogo -down- Gestao
+
+Recomendacao ..> ICatalogo : <<usa>>\nlê por gênero
+Busca ..> ICatalogo : <<usa>>\nconsulta títulos
+Avaliacoes ..> ICatalogo : <<usa>>\nreferencia conteúdo
+Gestao ..> ICatalogo : <<usa>>\nincluir, alterar,\nremover
+ICatalogo -down- Catalogo
+
+Catalogo ..> INotificacao : <<usa>>\navisa lançamento
+INotificacao -down- Notificacoes
+Notificacoes ..> INotifExterna : <<usa>>\nenvia aviso
+INotifExterna -down- ServicoNotif
+
+legend bottom
+|= Interface |= Operações (* = inferida dos casos de uso) |
+| IAçõesUsuário | acessarHome(), buscarConteúdos(termo)*, avaliarConteúdo(conteúdo)* |
+| IAçõesAdmin | gerenciarCatálogo()* |
+| ISessão | getGênerosFavoritos(), iniciarSessão() |
+| IRecomendação | calcularRecomendações(gêneros), calcularDescobertaSemanal()* |
+| IBusca | getSugestões(termo)*, buscarConteúdos(termo)* |
+| IAvaliação | registrarAvaliação(conteúdo, nota, comentário)* |
+| IGestãoCatálogo | incluirConteúdo()*, alterarConteúdo()*, removerConteúdo()* |
+| ICatálogo | getConteúdos(gêneros), buscarConteúdos(termo)*, salvarConteúdo()* |
+| INotificação | notificarLançamento(conteúdo)* |
+| INotificaçãoExterna | enviarNotificação()* |
+endlegend
+
+@enduml
