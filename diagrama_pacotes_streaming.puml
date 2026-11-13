@@ -1,0 +1,58 @@
+@startuml
+title Diagrama de Pacotes - Site de Streaming (Arquitetura em Camadas)
+
+skinparam packageStyle folder
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ArrowColor #444444
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #666666
+}
+
+package "Apresentação" as CAMADA_APRESENTACAO {
+  package "Interface do usuário" as UI_USUARIO #E8E6FA {
+  }
+  package "Interface do admin" as UI_ADMIN #E8E6FA {
+  }
+}
+
+package "Aplicação" as CAMADA_APLICACAO {
+  package "Controladores" as CONTROLADORES #E8E6FA {
+  }
+  package "Recomendação" as RECOMENDACAO #E8E6FA {
+  }
+}
+
+package "Domínio" as CAMADA_DOMINIO {
+  package "Modelo de domínio" as MODELO #E8E6FA {
+  }
+}
+
+package "Infraestrutura" as CAMADA_INFRA {
+  package "Persistência" as PERSISTENCIA #E8E6FA {
+  }
+  package "Notificação push" as PUSH #E8E6FA {
+  }
+}
+
+UI_USUARIO ..> CONTROLADORES
+UI_ADMIN ..> CONTROLADORES
+CONTROLADORES ..> RECOMENDACAO
+CONTROLADORES ..> MODELO
+RECOMENDACAO ..> MODELO
+MODELO ..> PERSISTENCIA
+MODELO ..> PUSH
+
+note right of MODELO
+  Usuário, Conteúdo, Gênero, Sessão
+end note
+
+note right of CONTROLADORES
+  CtrlHome, CtrlBusca, CtrlAdmin
+end note
+
+note right of RECOMENDACAO
+  motorRecomendacao
+end note
+@enduml
